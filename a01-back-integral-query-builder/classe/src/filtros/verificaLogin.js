@@ -1,4 +1,3 @@
-const conexao = require('../conexao');
 const jwt = require('jsonwebtoken');
 const senhaHash = require('../senhaHash');
 const knex = require('../conexao')
@@ -15,19 +14,22 @@ const verificaLogin = async (req, res, next) => {
 
         const { id } = jwt.verify(token, senhaHash);
 
-        const { rows, rowCount } = await knex('usuarios').where(id);
+        const logado = await knex('usuarios').where({id});
+       
 
-        if (rowCount === 0) {
+        if (logado === 0) {
             return res.status(404).json('Usuario não encontrado');
         }
 
-        const { senha, ...usuario } = rows[0];
+        const usuarios = logado[0]
+
+        const { senha, ...usuario } = usuarios;
 
         req.usuario = usuario;
 
         next();
     } catch (error) {
-        return res.status(400).json(error.message);
+        return res.status(400).json(`deu ruim aqui ${error.message}`);
     }
 }
 

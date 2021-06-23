@@ -1,5 +1,5 @@
-const conexao = require('../conexao');
 const bcrypt = require('bcrypt');
+const knex = require('../conexao')
 
 const cadastrarUsuario = async (req, res) => {
     const { nome, email, senha, nome_loja } = req.body;
@@ -21,7 +21,7 @@ const cadastrarUsuario = async (req, res) => {
     }
 
     try {
-        const { rowCount: quantidadeUsuarios } = await conexao.query('select * from usuarios where email = $1', [email]);
+        const { rowCount: quantidadeUsuarios } = await knex('usuarios').where('email',email);
 
         if (quantidadeUsuarios > 0) {
             return res.status(400).json("O email já existe");
@@ -29,8 +29,7 @@ const cadastrarUsuario = async (req, res) => {
 
         const senhaCriptografada = await bcrypt.hash(senha, 10);
 
-        const query = 'insert into usuarios (nome, email, senha, nome_loja) values ($1, $2, $3, $4)';
-        const usuario = await conexao.query(query, [nome, email, senhaCriptografada, nome_loja]);
+        const usuario = await knex('usuarios').insert({nome, email, senha:senhaCriptografada, nome_loja})
 
         if (usuario.rowCount === 0) {
             return res.status(400).json("O usuário não foi cadastrado.");

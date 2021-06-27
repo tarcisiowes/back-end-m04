@@ -21,7 +21,7 @@ const cadastrarUsuario = async (req, res) => {
     }
 
     try {
-        const { rowCount: quantidadeUsuarios } = await knex('usuarios').where('email',email);
+        const quantidadeUsuarios = await knex('usuarios').where('email',email);
 
         if (quantidadeUsuarios > 0) {
             return res.status(400).json("O email já existe");
@@ -31,7 +31,7 @@ const cadastrarUsuario = async (req, res) => {
 
         const usuario = await knex('usuarios').insert({nome, email, senha:senhaCriptografada, nome_loja})
 
-        if (usuario.rowCount === 0) {
+        if (usuario === 0) {
             return res.status(400).json("O usuário não foi cadastrado.");
         }
 
@@ -56,7 +56,7 @@ const atualizarPerfil = async (req, res) => {
 
         const usuarioAtualizado = await knex('usuarios').where('id',req.usuario.id).update( { nome, email, senha, nome_loja } )
 
-        if (usuarioAtualizado.rowCount === 0) {
+        if (usuarioAtualizado === 0) {
             return res.status(400).json("O usuario não foi atualizado");
         }
 

@@ -34,9 +34,17 @@ const schemaAtualizarProduto = yup.object().shape({
   imagem: yup.string()
 })
 
+const schemaLogarUsuario = yup.object().shape({
+
+  nome: yup.string().required('É obrigatório email e senha'),
+  senha: yup.string().min(8).required('É obrigatório email e senha')
+})
+
+
 module.exports = {
   schemaCadastroUsuario,
   schemaAtualizarUsuario,
-  schemaCadastroProduto
+  schemaCadastroProduto,
+  schemaLogarUsuario
 }
 

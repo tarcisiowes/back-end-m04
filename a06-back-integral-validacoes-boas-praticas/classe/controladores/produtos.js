@@ -10,7 +10,7 @@ const listarProdutos = async (req, res) => {
     let condicao = ''
 
     if (categoria) {
-      
+
       condicao = groupBy(categoria)            
     }
     
@@ -33,11 +33,13 @@ const obterProduto = async (req, res) => {
     const produto = await knex('produtos').where('usuario_id',usuario.id).where({id})
 
     if (produto === 0) {
+      
       return res.status(404).json('Produto não encontrado')
     }
 
     return res.status(200).json(produto[0])
   } catch (error) {
+
     return res.status(400).json(error.message)
   }
 }

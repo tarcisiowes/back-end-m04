@@ -1,33 +1,16 @@
 const bcrypt = require('bcrypt')
 const knex = require('../conexao')
+const { schemaCadastroUsuario, schemaAtualizarUsuario } = require('../validacoes/schemas')
 
 const cadastrarUsuario = async (req, res) => {
 
   const { nome, email, senha, nome_loja } = req.body
 
-  if (!nome) {
-
-    return res.status(404).json("O campo nome é obrigatório")
-  }
-
-  if (!email) {
-
-    return res.status(404).json("O campo email é obrigatório")
-  }
-
-  if (!senha) {
-
-    return res.status(404).json("O campo senha é obrigatório")
-  }
-
-  if (!nome_loja) {
-
-    return res.status(404).json("O campo nome_loja é obrigatório")
-  }
-
   try {
 
-    const quantidadeUsuarios = await knex('usuarios').where('email', email);
+    await schemaCadastroUsuario.validate(req.body)
+
+    const quantidadeUsuarios = await knex('usuarios').where('email', email)
 
     if (quantidadeUsuarios > 0) {
 
@@ -68,6 +51,8 @@ const atualizarPerfil = async (req, res) => {
 
   try {
       
+    await schemaAtualizarUsuario.validate(req.body)
+
     const usuarioAtualizado = await knex('usuarios').where('id', req.usuario.id).update({ nome, email, senha, nome_loja })
     
     if (usuarioAtualizado === 0) {

@@ -82,7 +82,7 @@ const atualizarProduto = async (req, res) => {
 
   try {
 
-    await schemaAtualizarProduto.validate(req.body)
+    await schemaCadastroProduto.validate(req.body)
 
     const temProduto = await knex('produtos').where('usuario_id',usuario.id).where({id})
 

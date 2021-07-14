@@ -48,7 +48,6 @@ const atualizarPerfil = async (req, res) => {
     return res.status(404).json('É obrigatório informar ao menos um campo para atualização')   
   }
   
-
   try {
       
     await schemaAtualizarUsuario.validate(req.body)

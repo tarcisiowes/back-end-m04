@@ -36,8 +36,8 @@ const schemaAtualizarProduto = yup.object().shape({
 
 const schemaLogarUsuario = yup.object().shape({
 
-  nome: yup.string().required('É obrigatório email e senha'),
-  senha: yup.string().min(8).required('É obrigatório email e senha')
+  email: yup.string().email().required(),
+  senha: yup.string().min(8).required()
 })
 
 

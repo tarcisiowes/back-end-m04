@@ -3,7 +3,10 @@ require('dotenv').config()
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const app = express();
-app.use(express.json());
+
+app.use(express.json())
+
+const filtroLogin = require('./filtros/filtrologin')
 
 const hash = 'uV9R6dJBs7erwsBw8giLZyexOjw';
 
@@ -107,36 +110,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// filtro para verificar usuario logado
-app.use(async (req, res, next) => {
-  const { authorization } = req.headers;
-  
-  if (!authorization) {
-    return res.status(401).json('Não autorizado');
-  }
-  
-  try {
-    const token = authorization.replace('Bearer ', '').trim();
-    
-    const {
-      id
-    } = jwt.verify(token, hash);
-    
-    const usuarioExiste = await knex('usuarios').where({ id }).first();
-    
-    if (!usuarioExiste) {
-      return res.status(404).json('Usuario não encontrado');
-    }
-    
-    const { senha, ...usuario } = usuarioExiste;
-    
-    req.usuario = usuario;
-    
-    next();
-  } catch (error) {
-    return res.status(400).json(error.message);
-  }
-});
+app.use(filtroLogin)
 
 // obter perfil do usuario logado pelo token
 app.get('/perfil', async (req, res) => {

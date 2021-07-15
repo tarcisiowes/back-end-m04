@@ -1,6 +1,6 @@
 const knex = require('../bancodedados/conexao')
-const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const loginSchema = require('../validacoes/schemas')
 
 const login = async (req, res) => {

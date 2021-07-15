@@ -1,16 +1,14 @@
 const knex = require('../bancodedados/conexao')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const loginSchema = require('../validacoes/schemas')
 
 const login = async (req, res) => {
   const { email, senha } = req.body
   
-  //TODO - implementar validaçao com yup
-  if (!email || !senha) {
-    return res.status(404).json('É obrigatório email e senha');
-  }
-  
   try {
+    await loginSchema.validate(req.body)
+
     const usuario = await knex('usuarios').where({ email }).first();
     
     if (!usuario) {

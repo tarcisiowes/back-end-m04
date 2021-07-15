@@ -7,15 +7,7 @@ app.use(express.json());
 
 const hash = 'uV9R6dJBs7erwsBw8giLZyexOjw';
 
-const knex = require('knex')({
-  client: 'pg',
-  connection: {
-    host: 'localhost',
-    user: 'postgres',
-    password: 'postgres',
-    database: 'sistema_cadastro'
-  }
-});
+
 
 // endpoint para cadastro de usuario
 app.post('/usuarios', async (req, res) => {

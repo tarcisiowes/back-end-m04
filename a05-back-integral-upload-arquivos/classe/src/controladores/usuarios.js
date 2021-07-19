@@ -1,5 +1,6 @@
 const knex = require('../conexao');
 const bcrypt = require('bcrypt');
+const aws = require('../services/aws')
 
 const cadastrarUsuario = async (req, res) => {
     const { nome, email, senha, nome_loja } = req.body;
@@ -75,6 +76,10 @@ const atualizarPerfil = async (req, res) => {
             if (emailUsuarioExiste) {
                 return res.status(404).json('O Email já existe.');
             }
+        }
+
+        if (imagem === null && req.usuario.imagem) {
+            await aws.deleteImage(req.usuario.imagem)
         }
 
         const usuarioAtualizado = await knex('usuarios')

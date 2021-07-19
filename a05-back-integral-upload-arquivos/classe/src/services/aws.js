@@ -29,4 +29,4 @@ const urlCompleta = (nome) => {
   return `https://${process.env.SPACES_BUCKET}.nyc3.digitaloceanspaces.com/${nome}`
 }
 
-module.exports = { sendImage, deleteImage }
+module.exports = { sendImage, deleteImage, urlCompleta }

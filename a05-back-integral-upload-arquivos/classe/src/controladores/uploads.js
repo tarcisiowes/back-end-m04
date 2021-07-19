@@ -2,13 +2,20 @@ const aws = require('../services/aws')
 
 const upload = async (req, res) => {
   const { imagem, nome } = req.body
+
   const buffer = Buffer.from(imagem, 'base64')
   
   try {
-    awaitaws.sendImage(nome, buffer)
-    returnres.status(200).json(nome)
+    await aws.sendImage(nome, buffer)
+
+    const response = {
+      imagem: nome,
+      urlImagem: aws.urlCompleta(nome)
+    }
+
+    return res.status(200).json(response)
   } catch (error) {
-    return res.status().json(error.message)
+    return res.status(400).json(error.message)
   }
 }
 

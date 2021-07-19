@@ -1,7 +1,9 @@
 const aws = require('aws-sdk')
 
 const spacesEndpoint = new aws.Endpoint('nyc3.digitaloceanspaces.com')
-const s3 = new aws.s3({
+
+const s3 = new aws.S3({
+
   endpoint: spacesEndpoint,
   accessKeyId: process.env.SPACES_KEY,
   secretAccessKey: process.env.SPACES_SECRET
@@ -16,11 +18,15 @@ const sendImage = async (nome, imagem) => {
   }).promise()
 }
 
-const deletImage = async (nome) => {
+const deleteImage = async (nome) => {
     return await s3.deletObject({
     Bucket: process.env.SPACES_BUCKET,
     key: nome
   }).promise()
 }
 
-module.exports = { sendImage, deletImage }
+const urlCompleta = (nome) => {
+  return `https://${process.env.SPACES_BUCKET}.nyc3.digitaloceanspaces.com/${nome}`
+}
+
+module.exports = { sendImage, deleteImage }

@@ -1,6 +1,7 @@
 const knex = require('../conexao');
 const jwt = require('jsonwebtoken');
 const senhaHash = require('../senhaHash');
+const aws = require('../services/aws')
 
 const verificaLogin = async (req, res, next) => {
     const { authorization } = req.headers;
@@ -19,6 +20,8 @@ const verificaLogin = async (req, res, next) => {
         if (!usuarioExiste) {
             return res.status(404).json('Usuario não encontrado');
         }
+
+        usuarioExiste.urlImagem = usuarioExiste.imagem ? aws.urlCompleta(usuarioExiste.imagem) : null
 
         const { senha, ...usuario } = usuarioExiste;
 

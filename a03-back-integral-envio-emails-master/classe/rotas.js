@@ -4,6 +4,8 @@ const usuarios = require('./controladores/usuarios');
 const rotas = express();
 
 // cadastro de usuario
-rotas.post('/usuarios', usuarios.cadastrarUsuario);
+rotas.post('/register', usuarios.cadastrarUsuario)
+rotas.post('/news', usuarios.enviarNewsletter)
+
 
 module.exports = rotas;

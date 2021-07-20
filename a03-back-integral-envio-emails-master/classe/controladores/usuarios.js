@@ -51,8 +51,41 @@ const cadastrarUsuario = async (req, res) => {
     }
 }
 
+const enviarNewsletter  = async (req, res) => {
+
+    const { subject, text } = req.body
+
+    if (!subject) {
+        return res.status(404).json("O campo subject é obrigatório")
+    }
+
+    if (!text) {
+        return res.status(404).json("O campo text é obrigatório")
+    }
+    
+    try {
+        
+        const usuarios = await knex('usuarios')
+
+        for (const usuario of usuarios) {
+            
+            const sendData = {
+                from: 'Market Cubos <nao-responder@test.com>',
+                to: usuario.email,
+                subject,
+                html: `<b>Ola ${ usuario.nome } ${ text } </b>`,
+            }
+            await nodemailer.sendMail(sendData)
+        }
+        
+        return res.status(200).json("Newsletter enviada com sucesso");
+    } catch (error) {
+        return res.status(400).json(error.message);
+    }
+}
+
 
 module.exports = {
     cadastrarUsuario,
-
+    enviarNewsletter
 }

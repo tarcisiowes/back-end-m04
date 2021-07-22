@@ -12,6 +12,14 @@ const cadastroSchema = yup.object().shape({
   nome_loja: yup.string().required()
 })
 
-module.exports = { loginSchema, cadastroSchema }
+const atualizarSchema = yup.object().shape({
+  email: yup.string().email(),
+  senha: yup.string(),
+  nome: yup.string(),
+  nome_loja: yup.string()
+})
+
+
+module.exports = { loginSchema, cadastroSchema, atualizarSchema }
 
 

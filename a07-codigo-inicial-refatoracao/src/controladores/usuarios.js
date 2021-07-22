@@ -1,6 +1,6 @@
 const knex = require('../bancodedados/conexao')
 const bcrypt = require('bcrypt')
-const {cadastroSchema} = require('../validacoes/schemas')
+const { cadastroSchema, atualizarSchema } = require('../validacoes/schemas')
 
 const cadastrarUsuario = async (req, res) => {
   const { nome, email, senha, nome_loja } = req.body;
@@ -8,9 +8,9 @@ const cadastrarUsuario = async (req, res) => {
   try {
     await cadastroSchema.validate(req.body)
 
-    const existeUsuario = await knex('usuarios').where({ email }).first();
+    const usuarioExiste = await knex('usuarios').where({ email }).first();
     
-    if (existeUsuario) {
+    if (usuarioExiste) {
       return res.status(400).json("O email já existe")
     }
     
@@ -29,26 +29,21 @@ const cadastrarUsuario = async (req, res) => {
 }
 
 const obterPerfil = async (req, res) => {
-  return res
-  .status(200)
-  .json(req.usuario);
+  return res.status(200).json(req.usuario)
 }
 
 const atualizarPefil = async (req, res) => {
-  let {
-    nome,
-    email,
-    senha,
-    nome_loja
-  } = req.body;
-  const { id } = req.usuario;
+  let { nome, email, senha, nome_loja } = req.body
+  
+  const { id } = req.usuario
   
   if (!nome && !email && !senha && !nome_loja) {
-    return res.status(404)
-    .json('É obrigatório informar ao menos um campo para atualização');
+    return res.status(404).json('É obrigatório informar ao menos um campo para atualização');
   }
   
   try {
+    await atualizarSchema.validate(req.body)
+
     const usuarioExiste = await knex('usuarios').where({ id }).first();
     
     if (!usuarioExiste) {
@@ -60,34 +55,20 @@ const atualizarPefil = async (req, res) => {
     }
     
     if (email !== req.usuario.email) {
-      const emailUsuarioExiste = await knex('usuarios')
-      .where({ email })
-      .first();
+      const emailUsuarioExiste = await knex('usuarios').where({ email }).first();
       
       if (emailUsuarioExiste) {
-        res
-        .status(404).json('O Email já existe.');
-        return;
+        return res.status(404).json('O Email já existe.')
       }
     }
     
-    const usuarioAtualizado = await knex('usuarios')
-    .where({ id })
-    .update({
-      nome,
-      email,
-      senha,
-      nome_loja
-    });
+    const usuarioAtualizado = await knex('usuarios').where({ id }).update({ nome, email, senha, nome_loja });
     
     if (!usuarioAtualizado) {
-      return res.status(400).json("O usuario não foi atualizado");
+      return res.status(400).json("O usuario não foi atualizado")
     }
     
-    res
-    .status(200)
-    .json('Usuario foi atualizado com sucesso.');
-    return;
+    return res.status(200).json('Usuario foi atualizado com sucesso.')
   } catch (error) {
     return res.status(400).json(error.message);
   }
